@@ -28,6 +28,14 @@ class TestBase_Model(unittest.TestCase):
         string2 = str(self.my_object)
         self.assertEqual(string1, string2)
 
+    def test_save(self):
+        '''check if the attribute updated_at (date) is updated for
+        the same object with the current date'''
+        first_updated = self.my_object.updated_at
+        self.my_object.save()
+        second_updated = self.my_object.updated_at
+        self.assertNotEqual(first_updated, second_updated)
+
     def test_to_dict(self):
         '''check if to_dict returns a dictionary, if add a class
         key with class name of the object and if updated_at and
@@ -45,6 +53,10 @@ class TestBase_Model(unittest.TestCase):
             if key == 'updated_at':
                 self.assertIsInstance(value, str)
 
-
-if __name__ == '__main__':
-    unittest.main()
+    def test_kwargs(self):
+        '''check when a dictionary in sent as **kwargs argument'''
+        self.my_object.name = "Holberton"
+        self.my_object.my_number = 89
+        my_object_json = self.my_object.to_dict()
+        my_object_kwargs = BaseModel(**my_object_json)
+        self.assertNotEqual(my_object_kwargs, self.my_object)
