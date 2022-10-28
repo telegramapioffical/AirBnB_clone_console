@@ -6,8 +6,7 @@ in the class's docstring
 """
 from uuid import uuid4
 from datetime import datetime
-
-
+import models
 class BaseModel:
     """
     defines all common attributes/methods for other classes
@@ -18,6 +17,7 @@ class BaseModel:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            models.storage.new(self)
         else:
             for i, j in zip(kwargs.keys(), kwargs.values()):
                 if i == "__class__":
@@ -37,6 +37,7 @@ class BaseModel:
         """Saves this object to the storage and updates @updated_at to the
         current date & time"""
         self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """returns a dictionary containing all keys/values"""
