@@ -14,12 +14,18 @@ class BaseModel:
     """
     def __init__(self, *args, **kwargs):
         """constructor"""
-        self.id = str(uuid4())  # Generate a unique ID for the instance
-        # Save the time the object was created
-        self.created_at = datetime.now()
-        # Updated every time the object is updated. Initialized to current
-        # time when object is created
-        self.updated_at = datetime.now()
+        if kwargs == {}:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+        else:
+            for i, j in zip(kwargs.keys(), kwargs.values()):
+                if i == "__class__":
+                    continue
+                if i == "created_at" or i == "updated_at":
+                    self.__setattr__(i, datetime.fromisoformat(j))
+                    continue
+                self.__setattr__(i, j)
 
     def __str__(self):
         """Overriding the __str__ method to display a
